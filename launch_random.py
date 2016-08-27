@@ -13,6 +13,7 @@ import tkFileDialog
 import tkMessageBox
 import tkSimpleDialog
 import os.path
+import time
 
 systems_list = []
 
@@ -235,7 +236,7 @@ def delete_tweet(check_twitter):
         if status == 'opened':
             for tweet in check:
                 text = tweet['text']
-                if 'NES' in text or 'Gameboy Advance' in text or 'Gameboy' in text or 'SNES' in text:
+                if 'NES' and 'finished playing' not in text in text or 'Gameboy Advance' in text and 'finished playing' not in text or 'Gameboy' in text and 'finished playing' not in text or 'SNES' in text and 'finished playing' not in text:
                     id = tweet['id_str']
                     twitter.destroy_status(id=id)
         else:
@@ -246,7 +247,7 @@ def delete_tweet(check_twitter):
         timeline = twitter.get_user_timeline(screen_name=screen_name,count=1)
         for tweet in timeline:
             text = tweet['text']
-            if 'NES' in text or 'Gameboy Advance' in text or 'Gameboy' in text or 'SNES' in text or game_name in text: #
+            if 'NES' and 'finished playing' not in text in text or 'Gameboy Advance' in text and 'finished playing' not in text or 'Gameboy' in text and 'finished playing' not in text or 'SNES' in text and 'finished playing' not in text or game_name in text and 'finished playing' not in text:
                 id = tweet['id_str']
                 twitter.destroy_status(id=id)
                 config.set('Status', 'status', 'exited')
@@ -345,12 +346,16 @@ elif path == 'different_folders':
         pass
 else:
     exit(1)
-
+start = time.time()
 subprocess.call([emulator_path, path_to_rom])
-
+stop = time.time()
+play_time_minutes = int(stop-start) / 60
+play_time_seconds= int(stop-start) % 60
 if tweeting == 'yes':
     time.sleep(3)
     check_twitter = 2
     delete_tweet(check_twitter)
+    time.sleep(2)
+    twitter.update_status(status='I just finished playing %s for the %s. Play time: %i minutes and %i seconds!' %(game_name, system_name, play_time_minutes, play_time_seconds))
 else:
     exit(0)
