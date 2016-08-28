@@ -94,6 +94,7 @@ def config(existing):
         config = ConfigParser.RawConfigParser()
         config.add_section('ROMs')
         config.add_section('Emulators')
+        config.add_section('Game')
         config.add_section('General')
         config.add_section('Twitter')
         config.add_section('Status')
@@ -315,47 +316,144 @@ def arrays():
         systems_list.append('snes')
     else:
         pass
+
+def game_choose(path):
+    if path == 'default':
+        type = '1'
+        roms_directory, system, game, path_to_rom = folder_structures(type)
+        system_type, system_name, game_name, emulator_path = game_system(game)
+        game_playing = ("%s for the %s" % (game_name, system_name))
+        print('%s/%s/%s is a %s game' % (roms_directory, system, game, system_type))
+        if tweeting == 'yes':
+            twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
+        else:
+            pass
+        start = time.time()
+        config.set('Game', 'current', '%s' % game_playing)
+        config.set('Game', 'fresh', 'yes')
+        with open('config.cfg', 'wb') as configfile:
+            config.write(configfile)
+        #subprocess.call([emulator_path, path_to_rom])
+        stop = time.time()
+        config.set('Game', 'current', 'None')
+        config.set('Game', 'last_played', '%s' % game_playing)
+        play_time_hours = int(stop-start) / 3600
+        play_time_minutes = int(stop-start) / 60
+        play_time_seconds= int(stop-start) % 60
+        last_played_time = ("%i hours %i minutes & %i seconds!" % (play_time_hours, play_time_minutes, play_time_seconds))
+        config.set('Game', 'last_played_time', '%s' % last_played_time)
+        config.set('Game', 'fresh', 'yes')
+        with open('config.cfg', 'wb') as configfile:
+            config.write(configfile)
+        if tweeting == 'yes':
+            root = tk.Tk()
+            root.withdraw()
+            time.sleep(3)
+            check_twitter = 2
+            delete_tweet(check_twitter)
+            time.sleep(2)
+            twitter.update_status(status='I just finished playing %s for the %s. Play time: %i hours, %i minutes, and %i seconds!' %(game_name, system_name, play_time_hours, play_time_minutes, play_time_seconds))
+            play_again = tkMessageBox.askquestion('Another game?', 'Do you want to play another random game?', icon='question')
+            return play_again
+        else:
+            root = tk.Tk()
+            root.withdraw()
+            play_again = tkMessageBox.askquestion('Another game?', 'Do you want to play another random game?', icon='question')
+            return play_again
+
+    elif path == 'mixed':
+        type = '2'
+        roms_directory, game, path_to_rom = folder_structures(type)
+        system_type, system_name, game_name, emulator_path = game_system(game)
+        game_playing = ("%s for the %s" % (game_name, system_name))
+        print('%s/%s is a %s game' % (roms_directory, game, system_type))
+        if tweeting == 'yes':
+            twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
+        else:
+            pass
+        start = time.time()
+        config.set('Game', 'current', '%s' % game_playing)
+        config.set('Game', 'fresh', 'yes')
+        with open('config.cfg', 'wb') as configfile:
+            config.write(configfile)
+        #subprocess.call([emulator_path, path_to_rom])
+        stop = time.time()
+        config.set('Game', 'current', 'None')
+        config.set('Game', 'last_played', '%s' % game_playing)
+        config.set('Game', 'fresh', 'yes')
+        play_time_hours = int(stop-start) / 3600
+        play_time_minutes = int(stop-start) / 60
+        play_time_seconds= int(stop-start) % 60
+        last_played_time = ("%i hours %i minutes & %i seconds!" % (play_time_hours, play_time_minutes, play_time_seconds))
+        config.set('Game', 'last_played_time', '%s' % last_played_time)
+        with open('config.cfg', 'wb') as configfile:
+            config.write(configfile)
+        if tweeting == 'yes':
+            root = tk.Tk()
+            root.withdraw()
+            time.sleep(3)
+            check_twitter = 2
+            delete_tweet(check_twitter)
+            time.sleep(2)
+            twitter.update_status(status='I just finished playing %s for the %s. Play time: %i hours, %i minutes, and %i seconds!' %(game_name, system_name, play_time_hours, play_time_minutes, play_time_seconds))
+            play_again = tkMessageBox.askquestion('Another game?', 'Do you want to play another random game?', icon='question')
+            return play_again
+        else:
+            root = tk.Tk()
+            root.withdraw()
+            play_again = tkMessageBox.askquestion('Another game?', 'Do you want to play another random game?', icon='question')
+            return play_again
+
+    elif path == 'different_folders':
+        type = '3'
+        arrays()
+        roms_directory, game, path_to_rom = folder_structures(type)
+        system_type, system_name, game_name, emulator_path = game_system(game)
+        game_playing = ("%s for the %s" % (game_name, system_name))
+        print('%s/%s is a %s game' % (roms_directory, game, system_type))
+        if tweeting == 'yes':
+            twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
+        else:
+            pass
+        start = time.time()
+        config.set('Game', 'current', '%s' % game_playing)
+        config.set('Game', 'fresh', 'yes')
+        with open('config.cfg', 'wb') as configfile:
+            config.write(configfile)
+        #subprocess.call([emulator_path, path_to_rom])
+        stop = time.time()
+        config.set('Game', 'current', 'None')
+        config.set('Game', 'last_played', '%s' % game_playing)
+        play_time_hours = int(stop-start) / 3600
+        play_time_minutes = int(stop-start) / 60
+        play_time_seconds= int(stop-start) % 60
+        last_played_time = ("%i hours %i minutes & %i seconds!" % (play_time_hours, play_time_minutes, play_time_seconds))
+        config.set('Game', 'last_played_time', '%s' % last_played_time)
+        config.set('Game', 'fresh', 'yes')
+        with open('config.cfg', 'wb') as configfile:
+            config.write(configfile)
+        if tweeting == 'yes':
+            root = tk.Tk()
+            root.withdraw()
+            time.sleep(3)
+            check_twitter = 2
+            delete_tweet(check_twitter)
+            time.sleep(2)
+            twitter.update_status(status='I just finished playing %s for the %s. Play time: %i hours, %i minutes, and %i seconds!' %(game_name, system_name, play_time_hours, play_time_minutes, play_time_seconds))
+            play_again = tkMessageBox.askquestion('Another game?', 'Do you want to play another random game?', icon='question')
+            return play_again
+        else:
+            root = tk.Tk()
+            root.withdraw()
+            play_again = tkMessageBox.askquestion('Another game?', 'Do you want to play another random game?', icon='question')
+            return play_again
+    else:
+        exit(1)
+
 path = config.get('General', 'folder_structure')
-if path == 'default':
-    type = '1'
-    roms_directory, system, game, path_to_rom = folder_structures(type)
-    system_type, system_name, game_name, emulator_path = game_system(game)
-    print('%s/%s/%s is a %s game' % (roms_directory, system, game, system_type))
-    if tweeting == 'yes':
-        twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
-    else:
-        pass
-elif path == 'mixed':
-    type = '2'
-    roms_directory, game, path_to_rom = folder_structures(type)
-    system_type, system_name, game_name, emulator_path = game_system(game)
-    print('%s/%s is a %s game' % (roms_directory, game, system_type))
-    if tweeting == 'yes':
-        twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
-    else:
-        pass
-elif path == 'different_folders':
-    type = '3'
-    arrays()
-    roms_directory, game, path_to_rom = folder_structures(type)
-    system_type, system_name, game_name, emulator_path = game_system(game)
-    print('%s/%s is a %s game' % (roms_directory, game, system_type))
-    if tweeting == 'yes':
-        twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
-    else:
-        pass
-else:
-    exit(1)
-start = time.time()
-subprocess.call([emulator_path, path_to_rom])
-stop = time.time()
-play_time_minutes = int(stop-start) / 60
-play_time_seconds= int(stop-start) % 60
-if tweeting == 'yes':
-    time.sleep(3)
-    check_twitter = 2
-    delete_tweet(check_twitter)
-    time.sleep(2)
-    twitter.update_status(status='I just finished playing %s for the %s. Play time: %i minutes and %i seconds!' %(game_name, system_name, play_time_minutes, play_time_seconds))
+play_again = game_choose(path)
+while play_again == 'yes':
+    path = config.get('General', 'folder_structure')
+    play_again = game_choose(path)
 else:
     exit(0)
