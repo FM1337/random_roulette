@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 # Random game roulette v3.0
 # By FMCore
 # This will choose a random game for you to playing
@@ -322,21 +324,25 @@ def game_choose(path):
         type = '1'
         roms_directory, system, game, path_to_rom = folder_structures(type)
         system_type, system_name, game_name, emulator_path = game_system(game)
-        game_playing = ("%s for the %s" % (game_name, system_name))
+        game_playing = ("%s" % game_name)
+        system_playing = ("%s" % system_name)
         print('%s/%s/%s is a %s game' % (roms_directory, system, game, system_type))
         if tweeting == 'yes':
             twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
         else:
             pass
         start = time.time()
-        config.set('Game', 'current', '%s' % game_playing)
+        config.set('Game', 'current_game', '%s' % game_playing)
+        config.set('Game', 'current_system', '%s' % system_playing)
         config.set('Game', 'fresh', 'yes')
         with open('config.cfg', 'wb') as configfile:
             config.write(configfile)
-        #subprocess.call([emulator_path, path_to_rom])
+        subprocess.call([emulator_path, path_to_rom])
         stop = time.time()
-        config.set('Game', 'current', 'None')
+        config.set('Game', 'current_game', 'None')
+        config.set('Game', 'current_system', 'None')
         config.set('Game', 'last_played', '%s' % game_playing)
+        config.set('Game', 'last_system', '%s' % system_playing)
         play_time_hours = int(stop-start) / 3600
         play_time_minutes = int(stop-start) / 60
         play_time_seconds= int(stop-start) % 60
@@ -365,21 +371,25 @@ def game_choose(path):
         type = '2'
         roms_directory, game, path_to_rom = folder_structures(type)
         system_type, system_name, game_name, emulator_path = game_system(game)
-        game_playing = ("%s for the %s" % (game_name, system_name))
+        game_playing = ("%s" % game_name)
+        system_playing = ("%s" % system_name)
         print('%s/%s is a %s game' % (roms_directory, game, system_type))
         if tweeting == 'yes':
             twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
         else:
             pass
         start = time.time()
-        config.set('Game', 'current', '%s' % game_playing)
+        config.set('Game', 'current_game', '%s' % game_playing)
+        config.set('Game', 'current_system', '%s' % system_playing)
         config.set('Game', 'fresh', 'yes')
         with open('config.cfg', 'wb') as configfile:
             config.write(configfile)
-        #subprocess.call([emulator_path, path_to_rom])
+        subprocess.call([emulator_path, path_to_rom])
         stop = time.time()
-        config.set('Game', 'current', 'None')
+        config.set('Game', 'current_game', 'None')
+        config.set('Game', 'current_system', 'None')
         config.set('Game', 'last_played', '%s' % game_playing)
+        config.set('Game', 'last_system', '%s' % system_playing)
         config.set('Game', 'fresh', 'yes')
         play_time_hours = int(stop-start) / 3600
         play_time_minutes = int(stop-start) / 60
@@ -409,21 +419,25 @@ def game_choose(path):
         arrays()
         roms_directory, game, path_to_rom = folder_structures(type)
         system_type, system_name, game_name, emulator_path = game_system(game)
-        game_playing = ("%s for the %s" % (game_name, system_name))
+        game_playing = ("%s" % game_name)
+        system_playing = ("%s" % system_name)
         print('%s/%s is a %s game' % (roms_directory, game, system_type))
         if tweeting == 'yes':
             twitter.update_status(status='I am playing %s for the %s' %(game_name, system_name))
         else:
             pass
         start = time.time()
-        config.set('Game', 'current', '%s' % game_playing)
+        config.set('Game', 'current_game', '%s' % game_playing)
+        config.set('Game', 'current_system', '%s' % system_playing)
         config.set('Game', 'fresh', 'yes')
         with open('config.cfg', 'wb') as configfile:
             config.write(configfile)
-        #subprocess.call([emulator_path, path_to_rom])
+        subprocess.call([emulator_path, path_to_rom])
         stop = time.time()
-        config.set('Game', 'current', 'None')
+        config.set('Game', 'current_game', 'None')
+        config.set('Game', 'current_system', 'None')
         config.set('Game', 'last_played', '%s' % game_playing)
+        config.set('Game', 'last_system', '%s' % system_playing)
         play_time_hours = int(stop-start) / 3600
         play_time_minutes = int(stop-start) / 60
         play_time_seconds= int(stop-start) % 60
